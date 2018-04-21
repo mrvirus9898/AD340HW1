@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AD340 HW1</string>
+    <string name="title_activity_zombie_movies">ZombieMovies</string>
+    <string name="title_activity_display_zombie">displayZombie</string>
 </resources>
