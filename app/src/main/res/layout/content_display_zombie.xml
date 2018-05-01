@@ -9,16 +9,26 @@
     tools:context=".displayZombie"
     tools:showIn="@layout/activity_display_zombie">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        android:label="Main Activity"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="134dp"
         android:layout_marginBottom="292dp"
-        android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/my_toolbar"
         app:layout_constraintVertical_bias="0.0">
 
         <ImageView
@@ -59,8 +69,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.288" />
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/descriptText"
@@ -69,15 +79,16 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:maxLines="50"
+        android:scrollbars="vertical"
         android:text="TextView"
         android:textSize="15.5dp"
         app:layout_constraintBottom_toBottomOf="parent"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/directorText"
-        android:maxLines = "50"
-
-        android:scrollbars = "vertical"/>
+        app:layout_constraintTop_toBottomOf="@+id/directorText" />
 
 
 </android.support.constraint.ConstraintLayout>
