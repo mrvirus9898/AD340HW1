@@ -1,5 +1,7 @@
 package com.example.athena.ad340hw1
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
@@ -13,6 +15,7 @@ import android.widget.Toast
 class RobotActivity1 : AppCompatActivity() {
 
     val ACT = RobotActivity1::class.java.getSimpleName()
+    lateinit var prefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -28,9 +31,12 @@ class RobotActivity1 : AppCompatActivity() {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
             val beratement = "? What an clunker!"
+            prefs = getSharedPreferences("AD340",Context.MODE_PRIVATE)
+
 
             // Get the Intent that started this activity and extract the string
-            val message = intent.getStringExtra(EXTRA_MESSAGE)
+            //val message = intent.getStringExtra(EXTRA_MESSAGE)
+            val message =  prefs.getString("favRobot", "")
 
             if(message == "R2-D2" || message == "r2-d2" || message == "R2-d2" || message == "r2-D2"){
                 Log.d(ACT, "R2-D2 detected")

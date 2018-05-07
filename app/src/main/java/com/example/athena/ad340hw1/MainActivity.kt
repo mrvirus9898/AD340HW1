@@ -1,6 +1,8 @@
 package com.example.athena.ad340hw1
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -8,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.*
 import android.graphics.Color
 import android.support.design.widget.NavigationView
+import android.support.design.widget.TextInputEditText
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.view.Menu
@@ -22,14 +25,27 @@ const val EXTRA_MESSAGE = "MESSAGE"
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     lateinit  var drawer: DrawerLayout
+    lateinit var prefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.my_toolbar))
+        prefs = getSharedPreferences("AD340",Context.MODE_PRIVATE)
+       /* if(prefs.getString("favRobot", "").isNotEmpty()){
+            val textinput: TextInputEditText = findViewById(R.id.textInputRobot)
+            textinput.setText(prefs.getString("favRobot", ""))
+        }*/
+
+        if(!isEmpty(prefs.getString("favRobot", ""))){
+            val textinput: TextInputEditText = findViewById(R.id.textInputRobot)
+            textinput.setText(prefs.getString("favRobot", ""))
+        }
 
         val grdview: GridView = findViewById(R.id.gridview)
         grdview.adapter = ImageAdapter(this)
+
+
 
         val naview: NavigationView = findViewById(R.id.nav_view)
         //What really messed me up was the act of setting the listener while also overriding the
@@ -88,13 +104,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     fun robotMessage(view: View) {
         val editText = findViewById<EditText>(R.id.textInputRobot)
+        val text = editText.text
 
-        val message = editText.text.toString()
-        val intent = Intent(this, RobotActivity1::class.java).apply {
-            putExtra(EXTRA_MESSAGE, message)
+        //Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+        if(isEmpty(text.toString())){
+            Toast.makeText(this, "Please enter your favorite robot", Toast.LENGTH_SHORT).show()
+        }else {
+            val editor = prefs.edit()
+            editor.putString("favRobot",text.toString())
+            editor.commit()
+            val intent = Intent(this, RobotActivity1::class.java).apply {
+                putExtra(EXTRA_MESSAGE, text.toString())
+            }
+            startActivity(intent)
         }
-        startActivity(intent)
     }
+
 
     /*fun wowClick(){
         //Toast.makeText(this, "Wow", Toast.LENGTH_SHORT).show()
