@@ -32,24 +32,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.my_toolbar))
         prefs = getSharedPreferences("AD340",Context.MODE_PRIVATE)
-       /* if(prefs.getString("favRobot", "").isNotEmpty()){
-            val textinput: TextInputEditText = findViewById(R.id.textInputRobot)
-            textinput.setText(prefs.getString("favRobot", ""))
-        }*/
 
         if(!isEmpty(prefs.getString("favRobot", ""))){
             val textinput: TextInputEditText = findViewById(R.id.textInputRobot)
-            textinput.setText(prefs.getString("favRobot", ""))
+            textinput.setText(loadString(prefs,"favRobot"))
         }
 
         val grdview: GridView = findViewById(R.id.gridview)
         grdview.adapter = ImageAdapter(this)
 
-
-
         val naview: NavigationView = findViewById(R.id.nav_view)
-        //What really messed me up was the act of setting the listener while also overriding the
-        // selected function. Seems like something that could be condensed into one action
         naview.setNavigationItemSelectedListener(this)
         drawer = findViewById(R.id.drawer)
     }
@@ -78,9 +70,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return super.onOptionsItemSelected(item)
     }
 
-
-
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.my_menu, menu)
@@ -92,40 +81,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         val id = item.getItemId()
-
-
         if (id == R.id.action_favorite || id == R.id.action_settings) {
             Toast.makeText(this@MainActivity, "Action clicked", Toast.LENGTH_LONG).show()
             return true
         }
-
         return super.onOptionsItemSelected(item)
     }
 
     fun robotMessage(view: View) {
         val editText = findViewById<EditText>(R.id.textInputRobot)
         val text = editText.text
-
         //Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
         if(isEmpty(text.toString())){
             Toast.makeText(this, "Please enter your favorite robot", Toast.LENGTH_SHORT).show()
         }else {
-            val editor = prefs.edit()
-            editor.putString("favRobot",text.toString())
-            editor.commit()
-            val intent = Intent(this, RobotActivity1::class.java).apply {
-                putExtra(EXTRA_MESSAGE, text.toString())
-            }
+            saveString(prefs,"favRobot",text.toString())
+            val intent = Intent(this, RobotActivity1::class.java)
             startActivity(intent)
         }
     }
-
-
-    /*fun wowClick(){
-        //Toast.makeText(this, "Wow", Toast.LENGTH_SHORT).show()
-    }*/
-
-
 
     class ImageAdapter(private val mContext: MainActivity) : BaseAdapter() {
 

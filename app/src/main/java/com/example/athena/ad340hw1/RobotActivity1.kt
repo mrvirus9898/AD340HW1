@@ -31,12 +31,10 @@ class RobotActivity1 : AppCompatActivity() {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
             val beratement = "? What an clunker!"
-            prefs = getSharedPreferences("AD340",Context.MODE_PRIVATE)
-
 
             // Get the Intent that started this activity and extract the string
             //val message = intent.getStringExtra(EXTRA_MESSAGE)
-            val message =  prefs.getString("favRobot", "")
+            val message =  loadString(getSharedPreferences("AD340",Context.MODE_PRIVATE),"favRobot")
 
             if(message == "R2-D2" || message == "r2-d2" || message == "R2-d2" || message == "r2-D2"){
                 Log.d(ACT, "R2-D2 detected")

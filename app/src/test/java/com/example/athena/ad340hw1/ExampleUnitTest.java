@@ -1,5 +1,8 @@
 package com.example.athena.ad340hw1;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import org.junit.Test;
 
 
@@ -28,7 +31,8 @@ public class ExampleUnitTest {
 
     @Test
     public void read_write(){
-        //var prefs = getSharedPreferences("AD340",Context.MODE_PRIVATE)
+        //Context dis =
+        //SharedPreferences prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
     }
 
 

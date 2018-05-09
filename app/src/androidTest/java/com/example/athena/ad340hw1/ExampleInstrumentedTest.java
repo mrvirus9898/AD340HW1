@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.rule.ActivityTestRule;
+import android.view.View;
 
 import org.junit.Test;
 import org.junit.Before;
@@ -14,7 +15,12 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static com.example.athena.ad340hw1.SupportPackKt.isEmpty;
+import static com.example.athena.ad340hw1.SupportPackKt.loadString;
+import static com.example.athena.ad340hw1.SupportPackKt.saveString;
 import static org.junit.Assert.*;
 
 /**
@@ -44,13 +50,30 @@ public class ExampleInstrumentedTest {
         assertEquals("com.example.athena.ad340hw1", appContext.getPackageName());
     }
 
+    //testChangeText verifys both the rendering and function of the textbox and button
+    //and I didnt need to make a new class or object to do it. THE POWER OF KOTLIN
     @Test
     public void testChangeText_sameActivity() {
 
+        onView(withId(R.id.textInputRobot))
+                .check(matches(isDisplayed()));
+
+        onView(withId(R.id.robot_button))
+                .check(matches(isDisplayed()));
+
+        //You really didn't think that I wouldn't find this little gem did you?
+        String original = new String(loadString(mActivityRule.getActivity().prefs, "favRobot"));
+
         // Type text and then press the button.
        onView(withId(R.id.textInputRobot))
-                .perform(typeText(" "), closeSoftKeyboard());
+                .perform(typeText(mStringToBetyped), closeSoftKeyboard());
         onView(withId(R.id.robot_button)).perform(click());
+
+        System.out.println(loadString(mActivityRule.getActivity().prefs, "favRobot") + " " + (original + mStringToBetyped));
+
+        assertTrue(loadString(mActivityRule.getActivity().prefs, "favRobot").equals(original + mStringToBetyped));
+
+        saveString(mActivityRule.getActivity().prefs,"favRobot",original);
 
         // Check that the text was changed.
 
