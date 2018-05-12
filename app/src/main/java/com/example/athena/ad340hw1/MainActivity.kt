@@ -140,6 +140,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         mContext.startActivity(intent)
                     }
                 }
+                else if(position == 2){
+                    imageView.setOnClickListener {
+                        val intent = Intent(mContext, cameraActivity::class.java).apply {
+                        }
+                        mContext.startActivity(intent)
+                    }
+                }
                 else {
                     imageView.setOnClickListener(View.OnClickListener {
                         Toast.makeText(mContext, bttnLables[position], Toast.LENGTH_SHORT).show()
