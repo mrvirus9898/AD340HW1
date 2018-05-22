@@ -52,45 +52,7 @@ class cameraActivity : AppCompatActivity() {
     }
 
 
-    class cameraStat(coordinates: String = "", id: String = "", imgUrl: String = "", description: String = "", type: String = "" ) : Parcelable {
-        var coordinates = coordinates
-        var id = id
-        var imgUrl = imgUrl
-        var description = description
-        var type = type
 
-        constructor(parcel: Parcel) : this(
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString())
-
-
-        //override fun toString() : String{     }
-        override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeString(coordinates)
-            parcel.writeString(id)
-            parcel.writeString(imgUrl)
-            parcel.writeString(description)
-            parcel.writeString(type)
-        }
-
-        override fun describeContents(): Int {
-            return 0
-        }
-
-        companion object CREATOR : Parcelable.Creator<cameraStat> {
-            override fun createFromParcel(parcel: Parcel): cameraStat {
-                return cameraStat(parcel)
-            }
-
-            override fun newArray(size: Int): Array<cameraStat?> {
-                return arrayOfNulls(size)
-            }
-        }
-
-    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -214,7 +176,7 @@ class cameraActivity : AppCompatActivity() {
             var camArray: Array<cameraStat> = camList.toTypedArray()
 
             viewManager = LinearLayoutManager(mContext)
-            viewAdapter = MyAdapter(camArray, mContext)
+            viewAdapter = camAdapter(camArray, mContext)
 
 
             recyclerView = findViewById<RecyclerView>(R.id.cameraRecycler)
@@ -224,82 +186,8 @@ class cameraActivity : AppCompatActivity() {
         }
     }
 
-    class MyAdapter(private val myDataset: Array<cameraStat>, private val mContext : cameraActivity) :
-            RecyclerView.Adapter<MyAdapter.ViewHolder>() {
-        var creationCounter = 0;
-
-        // Provide a reference to the views for each data item
-        // Complex data items may need more than one view per item, and
-        // you provide access to all the views for a data item in a view holder.
-        // Each data item is just a string in this case that is shown in a TextView.
-        class ViewHolder(val imgView: ImageView) : RecyclerView.ViewHolder(imgView)
 
 
 
-        // Create new views (invoked by the layout manager)
-        override fun onCreateViewHolder(parent: ViewGroup,
-                                        viewType: Int): MyAdapter.ViewHolder {
-            // create a new view
-            val imgView = ImageView(parent.context)
-            // set the view's size, margins, paddings and layout parameters
-            //textView.textSize = 35.5.toFloat()
-            imgView.setPadding(20,20,20,20)
-            val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            params.setMargins(20,20,20,20)
-            imgView.layoutParams = params
-
-            creationCounter++
-            return ViewHolder(imgView)
-        }
-
-        // Replace the contents of a view (invoked by the layout manager)
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            // - get element from your dataset at this position
-            // - replace the contents of the view with that element
-            //holder.imgView.text = myDataset[position].id
-            //myDataset[position].imgUrl
-            var completeURL: String = ""
-            //println(myDataset[position].type)
-            if(myDataset[position].type.equals("sdot")){
-              //  println("http://www.seattle.gov/trafficcams/images/"+myDataset[position].imgUrl)
-                completeURL = "http://www.seattle.gov/trafficcams/images/"+myDataset[position].imgUrl
-            }else if(myDataset[position].type.equals("wsdot")){
-                //println("http://images.wsdot.wa.gov/nw/"+myDataset[position].imgUrl)
-                completeURL = "http://images.wsdot.wa.gov/nw/"+myDataset[position].imgUrl
-            }
-            println(position)
-            DownloadImageTask(holder.imgView).execute(completeURL)
-
-        }
-
-
-        // Return the size of your dataset (invoked by the layout manager)
-        override fun getItemCount() = myDataset.size-1
-    }
-
-    class DownloadImageTask(internal var bmImage: ImageView) : AsyncTask<String, Void, Bitmap>() {
-
-        override fun doInBackground(vararg urls: String): Bitmap? {
-            val urldisplay = urls[0]
-            var mIcon11: Bitmap? = null
-            try {
-                val `in` = java.net.URL(urldisplay).openStream()
-                mIcon11 = BitmapFactory.decodeStream(`in`)
-            } catch (e: Exception) {
-                //Log.e("Error", e.message)
-                e.printStackTrace()
-            }
-
-            return mIcon11
-        }
-
-        override fun onPostExecute(result: Bitmap?) {
-            if(result == null){
-                bmImage.setImageResource(R.drawable.clunker)
-            }else {
-                bmImage.setImageBitmap(result)
-            }
-        }
-    }
 
 }

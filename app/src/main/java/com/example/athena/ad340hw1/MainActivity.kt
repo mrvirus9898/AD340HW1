@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 R.drawable.sample_4, R.drawable.sample_5)
 
         private val bttnLables = arrayOf<String>(
-                "Zombie Movies","About","Favorite Acids","Do not click"
+                "Zombie Movies","About","Cameras","Do not click"
         )
 
         override fun getCount(): Int = mThumbIds.size
@@ -142,7 +142,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
                 else if(position == 2){
                     imageView.setOnClickListener {
-                        val intent = Intent(mContext, cameraActivity::class.java).apply {
+                        val intent = Intent(mContext, MapsActivity2::class.java).apply {
                         }
                         mContext.startActivity(intent)
                     }

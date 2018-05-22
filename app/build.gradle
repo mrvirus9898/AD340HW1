@@ -31,6 +31,9 @@ dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.31'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.google.code.gson:gson:2.6.2'
+    implementation 'com.google.android.gms:play-services-maps:15.0.1'
+    implementation 'com.google.android.gms:play-services-location:15.0.1'
+
 }
 repositories {
     mavenCentral()
