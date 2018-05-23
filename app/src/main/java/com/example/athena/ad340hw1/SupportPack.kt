@@ -18,6 +18,8 @@ import java.io.InputStreamReader
 import java.net.HttpURLConnection.HTTP_OK
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
+import android.graphics.drawable.Drawable
+import android.util.AttributeSet
 
 
 /**
@@ -223,4 +225,23 @@ class camAdapter(private val myDataset: Array<cameraStat>, private val mContext 
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = myDataset.size-1
+}
+
+class ProportionalImageView : ImageView {
+
+    constructor(context: Context) : super(context) {}
+
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}
+
+    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {}
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val d = drawable
+        if (d != null) {
+            val w = View.MeasureSpec.getSize(widthMeasureSpec)
+            val h = w * d.intrinsicHeight / d.intrinsicWidth
+            setMeasuredDimension(w, h)
+        } else
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+    }
 }

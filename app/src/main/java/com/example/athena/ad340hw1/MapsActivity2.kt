@@ -13,6 +13,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.Toast
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -39,20 +41,18 @@ class MapsActivity2 : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
     private lateinit var mMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var lastLocation: Location
-    private lateinit var camArray: Array<cameraStat>
     private lateinit var infoView: ImageView
-    private lateinit var currentMarker: Marker
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps2)
         setSupportActionBar(findViewById(R.id.my_toolbar))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
         infoView = findViewById(R.id.place_info)
-
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
@@ -90,6 +90,7 @@ class MapsActivity2 : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        mMap.setOnInfoWindowClickListener { infoView.visibility = View.VISIBLE }
 
         // Add a marker in Sydney and move the camera
         mMap.uiSettings.isZoomControlsEnabled = true
@@ -105,7 +106,7 @@ class MapsActivity2 : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
         val markerOptions = MarkerOptions().position(location)
 
        // val titleStr = getAddress(location)
-        val titleStr = "Here"
+        val titleStr = "Here, no picture available"
         markerOptions.title(titleStr)
         //markerOptions.
 
@@ -113,14 +114,14 @@ class MapsActivity2 : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
     }
 
     private fun placeMarkerOnMap(location: LatLng, cam: cameraStat) {
-        val markerOptions = MarkerOptions().position(location)
+        /*
+        val markerOptions = MarkerOptions().position(location).title(cam.id)
+        val tempMark = mMap.addMarker(markerOptions)
+        tempMark.tag = cam*/
 
-        val titleStr = cam.id
-        markerOptions.title(titleStr)
-        //markerOptions.
-        //markerOptions.
-
-        mMap.addMarker(markerOptions)
+        //ENGAGE TURBO KOTLIN ENGINE
+        //SET NONSENSE TO 11
+        mMap.addMarker(MarkerOptions().position(location).title(cam.id + " Click here for picture, if available")).tag = cam
     }
 
     private fun setUpMap() {
@@ -149,8 +150,8 @@ class MapsActivity2 : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
         JsonTask(this).execute("https://web6.seattle.gov/Travelers/api/Map/Data?zoomId=13&type=2")
 
     }
-
-    private fun fillMarkers(){
+    //No longer used, replaced by cameraStat being placed in the tag of the Marker
+   /* private fun fillMarkers(){
         for(tempCam:cameraStat in camArray){
 
             val lat = tempCam.coordinates.substring(1,tempCam.coordinates.indexOf(",")).toDouble()
@@ -161,38 +162,48 @@ class MapsActivity2 : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
             //println(lat.toString() + " " + long.toString())
             placeMarkerOnMap(LatLng(lat,long), tempCam)
         }
-    }
+    }*/
 
     private fun getAddress(latLng: LatLng): String {
         // 1
         val geocoder = Geocoder(this)
         val addresses: List<Address>?
-        val address: Address?
-        var addressText = ""
-
+        //println("Start")
         try {
             // 2
             addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
             // 3
             if (null != addresses && !addresses.isEmpty()) {
-                address = addresses[0]
+                return addresses[0].getAddressLine(0)
+                /*println(address.getAddressLine(0))
                 for (i in 0 until address.maxAddressLineIndex) {
                     addressText += if (i == 0) address.getAddressLine(i) else "\n" + address.getAddressLine(i)
                 }
+                println(addressText)*/
             }
         } catch (e: IOException) {
             Log.e("MapsActivity2", e.localizedMessage)
         }
 
-        return addressText
+        return "Address not found"
     }
 
     override fun onMarkerClick(p0: Marker?): Boolean {
-        Toast.makeText(this@MapsActivity2, p0!!.title, Toast.LENGTH_LONG).show()
+        //Toast.makeText(this@MapsActivity2, p0!!.title, Toast.LENGTH_LONG).show()
         /*
-        Intent
-         */
+        Intent*/
+        if(p0!!.tag != null){
+            val tempCam = p0!!.tag as cameraStat
+            DownloadImageTask(infoView).execute(tempCam.imgUrl)
+            //infoView.visibility = View.VISIBLE
+        }
+        p0!!.snippet = getAddress(p0!!.position)
+        //p0!!.showInfoWindow()
         return false
+    }
+
+    fun setInvis(view: View){
+        infoView.visibility = View.INVISIBLE
     }
 
     private inner class JsonTask(var mContext: MapsActivity2) : AsyncTask<String, String, String>() {
@@ -256,8 +267,6 @@ class MapsActivity2 : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
 
         override fun onPostExecute(result: String) {
             super.onPostExecute(result)
-            println("START")
-            var camList: MutableList<cameraStat> = mutableListOf<cameraStat>()
             var jObj: JSONObject = JSONObject(result)
             var coords: JSONArray = jObj.getJSONArray("Features")
             for(i in 0..(coords.length()-1)) {
@@ -266,44 +275,30 @@ class MapsActivity2 : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarke
 
                 for(j in 0..cameraCount) {
 
-                    /*println(JSONArray(tempJason.getString("Cameras")).getJSONObject(j).getString("Id"))
-                    println(JSONArray(tempJason.getString("Cameras")).getJSONObject(j).getString("Description"))
-                    println(JSONArray(tempJason.getString("Cameras")).getJSONObject(j).getString("ImageUrl"))
-                    println(JSONArray(tempJason.getString("Cameras")).getJSONObject(j).getString("Type"))*/
-
                     var tempCam: cameraStat = cameraStat()
                     tempCam.coordinates = JSONObject(coords[i].toString()).getString("PointCoordinate")
                     tempCam.id = JSONArray(tempJason.getString("Cameras")).getJSONObject(j).getString("Id")
                     tempCam.description = JSONArray(tempJason.getString("Cameras")).getJSONObject(j).getString("Description")
-                    tempCam.imgUrl = JSONArray(tempJason.getString("Cameras")).getJSONObject(j).getString("ImageUrl")
+
                     tempCam.type = JSONArray(tempJason.getString("Cameras")).getJSONObject(j).getString("Type")
+                    if(tempCam.type.equals("sdot")){
+                        tempCam.imgUrl = "http://www.seattle.gov/trafficcams/images/" + JSONArray(tempJason.getString("Cameras")).getJSONObject(j).getString("ImageUrl")
+                    }else{
+                        tempCam.imgUrl = "http://images.wsdot.wa.gov/nw/" + JSONArray(tempJason.getString("Cameras")).getJSONObject(j).getString("ImageUrl")
+                    }
+
+                    val lat = tempCam.coordinates.substring(1,tempCam.coordinates.indexOf(",")).toDouble()
+                    val long = tempCam.coordinates.substring(tempCam.coordinates.indexOf(",")+1,tempCam.coordinates.length-1).toDouble()
+                    placeMarkerOnMap(LatLng(lat,long), tempCam)
+
 
                     /*println(tempCam.coordinates)
                     println(tempCam.id)
                     println(tempCam.description)
                     println(tempCam.imgUrl)
                     println(tempCam.type)*/
-                    camList.add(tempCam)
-
-                    /*var isCam: cameraStat = camList.get(0)
-                    println(isCam.coordinates)
-                    println(isCam.id)
-                    println(isCam.description)
-                    println(isCam.imgUrl)
-                    println(isCam.type)*/
                 }
             }
-            camArray = camList.toTypedArray()
-            fillMarkers()
-
-            /*viewManager = LinearLayoutManager(mContext)
-            viewAdapter = camAdapter(camArray, mContext)
-
-
-            recyclerView = findViewById<RecyclerView>(R.id.cameraRecycler)
-            recyclerView.setHasFixedSize(true)
-            recyclerView.layoutManager = viewManager
-            recyclerView.adapter = viewAdapter*/
         }
     }
 }
