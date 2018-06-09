@@ -20,10 +20,10 @@ class RobotActivity1 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         if (savedInstanceState != null) {
-            Log.d(ACT, "onCreate() Restoring previous state")
+            //Log.d(ACT, "onCreate() Restoring previous state")
             /* restore state */
         }else {
-            Log.d(ACT, "onCreate() No saved state available")
+            //Log.d(ACT, "onCreate() No saved state available")
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_robot_activity1)
             this.setTitle("Robot")
@@ -37,7 +37,7 @@ class RobotActivity1 : AppCompatActivity() {
             val message =  loadString(getSharedPreferences("AD340",Context.MODE_PRIVATE),"favRobot")
 
             if(message == "R2-D2" || message == "r2-d2" || message == "R2-d2" || message == "r2-D2"){
-                Log.d(ACT, "R2-D2 detected")
+                //Log.d(ACT, "R2-D2 detected")
                 val imgView = findViewById<ImageView>(R.id.robotView).setImageResource(R.drawable.brokenr2)
             }
 

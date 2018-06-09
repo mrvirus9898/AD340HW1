@@ -1,6 +1,6 @@
 package com.example.athena.ad340hw1
 
-import android.content.Context
+
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -12,14 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-import java.io.IOException
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.net.HttpURLConnection.HTTP_OK
-import java.net.URL
-import javax.net.ssl.HttpsURLConnection
-import android.graphics.drawable.Drawable
-import android.util.AttributeSet
+
 
 
 /**
@@ -43,11 +36,7 @@ fun loadString(prefs: SharedPreferences, key: String): String{
     return prefs.getString(key, "")
 }
 
-fun getViewString(view: View){
-
-}
-
-fun preferTester(currentPref: SharedPreferences, key: String, test_string: String): Boolean{
+/*fun preferTester(currentPref: SharedPreferences, key: String, test_string: String): Boolean{
     var editor = currentPref.edit()
     val original_string: String = currentPref.getString(key,"")
 
@@ -59,9 +48,9 @@ fun preferTester(currentPref: SharedPreferences, key: String, test_string: Strin
     editor.commit()
 
     return isWorking
-}
+}*/
 
-@Throws(IOException::class)
+/*@Throws(IOException::class)
 fun downloadUrl(url: URL): String? {
     var stream: InputStream? = null
     var connection: HttpsURLConnection? = null
@@ -103,11 +92,11 @@ fun downloadUrl(url: URL): String? {
         }
     }
     return result
-}
+}*/
 
-fun getData(url: String): String{
+/*fun getData(url: String): String{
     return URL(url).readText()
-}
+}*/
 
 class cameraStat(coordinates: String = "", id: String = "", imgUrl: String = "", description: String = "", type: String = "" ) : Parcelable {
     var coordinates = coordinates
@@ -227,7 +216,7 @@ class camAdapter(private val myDataset: Array<cameraStat>, private val mContext 
     override fun getItemCount() = myDataset.size-1
 }
 
-class ProportionalImageView : ImageView {
+/*class ProportionalImageView : ImageView {
 
     constructor(context: Context) : super(context) {}
 
@@ -244,4 +233,4 @@ class ProportionalImageView : ImageView {
         } else
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
-}
+}*/

@@ -46,8 +46,6 @@ class cameraActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         this.setTitle("Camera Status")
 
-
-
         JsonTask(this).execute("https://web6.seattle.gov/Travelers/api/Map/Data?zoomId=13&type=2")
     }
 
@@ -79,11 +77,6 @@ class cameraActivity : AppCompatActivity() {
 
         override fun onPreExecute() {
             super.onPreExecute()
-
-            /*pd = ProgressDialog(this@MainActivity)
-            pd.setMessage("Please wait")
-            pd.setCancelable(false)
-            pd.show()*/
         }
 
         override fun doInBackground(vararg params: String): String {
@@ -107,7 +100,6 @@ class cameraActivity : AppCompatActivity() {
 
                 while ((line) != null) {
                     buffer.append(line + "\n")
-                    //Log.d("Response: ", "> $line")   //here u ll get whole response...... :-)
                     line = reader.readLine()
                 }
 
@@ -158,19 +150,8 @@ class cameraActivity : AppCompatActivity() {
                     tempCam.imgUrl = JSONArray(tempJason.getString("Cameras")).getJSONObject(j).getString("ImageUrl")
                     tempCam.type = JSONArray(tempJason.getString("Cameras")).getJSONObject(j).getString("Type")
 
-                    /*println(tempCam.coordinates)
-                    println(tempCam.id)
-                    println(tempCam.description)
-                    println(tempCam.imgUrl)
-                    println(tempCam.type)*/
                     camList.add(tempCam)
 
-                    /*var isCam: cameraStat = camList.get(0)
-                    println(isCam.coordinates)
-                    println(isCam.id)
-                    println(isCam.description)
-                    println(isCam.imgUrl)
-                    println(isCam.type)*/
                 }
             }
             var camArray: Array<cameraStat> = camList.toTypedArray()

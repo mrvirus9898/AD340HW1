@@ -13,6 +13,7 @@ import android.support.design.widget.NavigationView
 import android.support.design.widget.TextInputEditText
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
+import android.support.v7.app.ActionBar
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -40,6 +41,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val grdview: GridView = findViewById(R.id.gridview)
         grdview.adapter = ImageAdapter(this)
+
+        val actionbar: ActionBar? = supportActionBar
+        actionbar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp)
+
+        }
 
         val naview: NavigationView = findViewById(R.id.nav_view)
         naview.setNavigationItemSelectedListener(this)
@@ -80,12 +88,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        val id = item.getItemId()
-        if (id == R.id.action_favorite || id == R.id.action_settings) {
-            Toast.makeText(this@MainActivity, "Action clicked", Toast.LENGTH_LONG).show()
-            return true
+        val id = item.itemId
+        return when (id) {
+            android.R.id.home -> {
+                drawer.openDrawer(GravityCompat.START)
+                true
+            }
+            else ->{
+                if (id == R.id.action_favorite || id == R.id.action_settings) {
+                    Toast.makeText(this@MainActivity, "Action clicked", Toast.LENGTH_LONG).show()
+                    return true
+                }
+                return super.onOptionsItemSelected(item)
+            }
         }
-        return super.onOptionsItemSelected(item)
+
+
+
     }
 
     fun robotMessage(view: View) {

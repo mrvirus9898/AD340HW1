@@ -31,13 +31,7 @@ class displayZombie : AppCompatActivity() {
         val director = intent.getStringExtra("Director")
         val image = intent.getStringExtra("Image")
         val description = intent.getStringExtra("Description")
-        /*println("Hello")
-        println(rank)
-        println(title)
-        println(year)
-        println(director)
-        println(image)
-        println(description)*/
+
 
         val headline = findViewById<TextView>(R.id.zombie_headline)
         headline.textSize = 40.5.toFloat()
@@ -83,7 +77,6 @@ class displayZombie : AppCompatActivity() {
                 val `in` = java.net.URL(urldisplay).openStream()
                 mIcon11 = BitmapFactory.decodeStream(`in`)
             } catch (e: Exception) {
-                //Log.e("Error", e.message)
                 e.printStackTrace()
             }
             return mIcon11
